@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>ブロック崩し</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="title">🧱 ブロック崩し</h1>
+      <div class="scores">
+        <div class="score-box">
+          <span class="score-label">スコア</span>
+          <span class="score-value" id="score">0</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">ベスト</span>
+          <span class="score-value" id="best-score">0</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">残機</span>
+          <span class="score-value" id="lives">●●●</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">レベル</span>
+          <span class="score-value" id="level-display">Lv.1</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <select id="difficulty" aria-label="難易度">
+        <option value="easy">かんたん</option>
+        <option value="normal" selected>ふつう</option>
+        <option value="hard">むずかしい</option>
+        <option value="oni">🔴 鬼</option>
+      </select>
+      <button id="new-game" type="button">新しいゲーム</button>
+      <button id="pause-btn" type="button" aria-label="一時停止" hidden>⏸</button>
+      <button id="mute-btn" type="button" aria-label="ミュート">🔊</button>
+      <button id="theme-btn" type="button" aria-label="テーマ切替">🌓</button>
+      <button id="fs-btn" type="button" aria-label="フルスクリーン">⛶</button>
+      <button id="stats-btn" type="button" aria-label="統計">📊</button>
+    </div>
+
+    <p class="hint">← → キー/マウス/スライドでパドルを動かそう</p>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas" width="400" height="500"></canvas>
+    </div>
+  </div>
+
+  <!-- 一時停止オーバーレイ -->
+  <div id="pause-overlay" hidden>
+    <p>⏸ 一時停止中</p>
+  </div>
+
+  <!-- ゲームオーバーモーダル -->
+  <div class="modal-overlay" id="over-modal" role="dialog" aria-modal="true" aria-labelledby="over-title" hidden>
+    <div class="modal">
+      <h2 id="over-title">ゲームオーバー</h2>
+      <p id="over-score-text"></p>
+      <p id="over-best-text" hidden>🏆 ベストスコア更新！</p>
+      <button id="share-btn" type="button" hidden>📋 シェア</button>
+      <button id="over-new" type="button">もう一度</button>
+    </div>
+  </div>
+
+  <!-- ステージクリアモーダル -->
+  <div class="modal-overlay" id="clear-modal" role="dialog" aria-modal="true" aria-labelledby="clear-title" hidden>
+    <div class="modal">
+      <h2 id="clear-title">ステージクリア！</h2>
+      <p id="clear-score-text"></p>
+      <button id="clear-next" type="button">次のステージへ</button>
+    </div>
+  </div>
+
+  <!-- 統計モーダル -->
+  <div class="modal-overlay" id="stats-modal" role="dialog" aria-modal="true" aria-labelledby="stats-title" hidden>
+    <div class="modal">
+      <h2 id="stats-title">📊 統計</h2>
+      <table class="stats-table">
+        <tr><th>プレイ回数</th><td id="stats-played">0</td></tr>
+        <tr><th>クリア数</th><td id="stats-wins">0</td></tr>
+        <tr><th>ハイスコア</th><td id="stats-high">0</td></tr>
+        <tr><th>平均スコア</th><td id="stats-avg">0</td></tr>
+      </table>
+      <button id="stats-close" type="button">閉じる</button>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

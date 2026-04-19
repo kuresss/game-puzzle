@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ハノイの塔</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0d1b2a" />
+</head>
+<body>
+  <h1>ハノイの塔</h1>
+  <div id="controls">
+    <select id="difficulty" aria-label="難易度">
+      <option value="easy">かんたん (3枚)</option>
+      <option value="normal" selected>ふつう (4枚)</option>
+      <option value="hard">むずかしい (5枚)</option>
+      <option value="oni">🔴 鬼 (7枚・127手)</option>
+    </select>
+    <button id="reset-btn" type="button">リセット</button>
+    <button id="undo-btn" type="button" disabled>元に戻す</button>
+    <button id="theme-btn" type="button" aria-label="テーマ切替">🌓</button>
+    <button id="mute-btn" type="button" aria-label="ミュート">🔊</button>
+    <button id="fs-btn" type="button" aria-label="フルスクリーン">⛶</button>
+    <button id="stats-btn" type="button" aria-label="統計">📊</button>
+  </div>
+  <div id="info">
+    <span>手数: <span id="moves">0</span></span>
+    <span>ベスト: <span id="best">-</span></span>
+    <button id="share-btn" type="button" hidden>📋 シェア</button>
+  </div>
+  <div id="pegs"></div>
+
+  <div id="stats-modal" hidden role="dialog" aria-modal="true" aria-labelledby="stats-title">
+    <div class="stats-box">
+      <h2 id="stats-title">統計</h2>
+      <table class="stats-table">
+        <tbody>
+          <tr><th>プレイ回数</th><td id="stat-played">0</td></tr>
+          <tr><th>クリア数</th><td id="stat-wins">0</td></tr>
+          <tr><th>クリア率</th><td id="stat-rate">0%</td></tr>
+          <tr><th>現在の連勝</th><td id="stat-streak">0</td></tr>
+          <tr><th>最長連勝</th><td id="stat-best-streak">0</td></tr>
+        </tbody>
+      </table>
+      <button id="stats-close" type="button">閉じる</button>
+    </div>
+  </div>
+
+  <script type="module" src="www/script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

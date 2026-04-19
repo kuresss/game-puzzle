@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>サイモン</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="title">🎯 サイモン</h1>
+      <div class="scores">
+        <div class="score-box">
+          <span class="score-label">ラウンド</span>
+          <span class="score-value" id="round">0</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">ベスト</span>
+          <span class="score-value" id="best-score">0</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button id="new-game" type="button">新しいゲーム</button>
+      <select id="difficulty" aria-label="難易度">
+        <option value="easy">かんたん</option>
+        <option value="normal" selected>ふつう</option>
+        <option value="hard">むずかしい</option>
+        <option value="oni">🔴 鬼</option>
+      </select>
+      <button id="pause-btn" type="button" hidden>⏸</button>
+      <button id="mute-btn" type="button" aria-label="ミュート">🔊</button>
+      <button id="theme-btn" type="button" aria-label="テーマ切替">🌓</button>
+      <button id="fs-btn" type="button" aria-label="フルスクリーン">⛶</button>
+      <button id="stats-btn" type="button" aria-label="統計">📊</button>
+      <button id="help-btn" type="button" aria-label="遊び方">？</button>
+    </div>
+
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <!-- 4色ボタン -->
+    <div class="simon-grid" id="simon-grid" aria-label="サイモンボタン">
+      <button class="simon-btn" id="btn-red"    data-color="red"    type="button" aria-label="赤"></button>
+      <button class="simon-btn" id="btn-blue"   data-color="blue"   type="button" aria-label="青"></button>
+      <button class="simon-btn" id="btn-yellow" data-color="yellow" type="button" aria-label="黄"></button>
+      <button class="simon-btn" id="btn-green"  data-color="green"  type="button" aria-label="緑"></button>
+    </div>
+
+    <p class="hint" id="hint"></p>
+  </div>
+
+  <!-- 遊び方モーダル -->
+  <div class="modal-overlay" id="howto-modal" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+    <div class="modal">
+      <h2 id="howto-title">遊び方</h2>
+      <p>コンピュータが光らせた色の順番を覚えて、同じ順番にボタンを押しましょう！</p>
+      <ul class="howto-list">
+        <li>👁️ 光るボタンの順番をよく見て</li>
+        <li>👆 同じ順番でボタンを押す</li>
+        <li>✅ 正解したら次のラウンドへ（1つ増える）</li>
+        <li>❌ 間違えたらゲームオーバー</li>
+        <li>⚡ ラウンドが進むほど速くなる！</li>
+      </ul>
+      <button id="howto-close" type="button">はじめる</button>
+    </div>
+  </div>
+
+  <!-- ゲームオーバーモーダル -->
+  <div class="modal-overlay" id="over-modal" role="dialog" aria-modal="true" aria-labelledby="over-title" hidden>
+    <div class="modal">
+      <h2 id="over-title">❌ ゲームオーバー</h2>
+      <p id="over-score-text"></p>
+      <p id="over-best-text" hidden>🏆 ベストスコア更新！</p>
+      <button id="share-btn" type="button" hidden>📋 シェア</button>
+      <button id="over-new" type="button">もう一度</button>
+    </div>
+  </div>
+
+  <!-- 統計モーダル -->
+  <div class="modal-overlay" id="stats-modal" role="dialog" aria-modal="true" aria-labelledby="stats-title" hidden>
+    <div class="modal">
+      <h2 id="stats-title">📊 統計</h2>
+      <table class="stats-table">
+        <tr><th>プレイ回数</th><td id="stats-played">0</td></tr>
+        <tr><th>最高ラウンド</th><td id="stats-best">0</td></tr>
+        <tr><th>平均ラウンド</th><td id="stats-avg">0.0</td></tr>
+      </table>
+      <button id="stats-close" type="button">閉じる</button>
+    </div>
+  </div>
+
+  <!-- 一時停止オーバーレイ -->
+  <div class="pause-overlay" id="pause-overlay" aria-live="polite" hidden>
+    <div class="pause-message">⏸ 一時停止中</div>
+    <div class="pause-hint">Esc または ⏸ ボタンで再開</div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

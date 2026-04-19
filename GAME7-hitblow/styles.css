@@ -1,0 +1,153 @@
+:root {
+  --bg: #0d1b2a;
+  --surface: #1a2e44;
+  --surface2: #243b55;
+  --accent: #ffd54f;
+  --text: #f0f4f8;
+  --text-muted: #8eacc4;
+  --hit-color: #ef5350;
+  --blow-color: #42a5f5;
+  --radius: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+}
+
+.app { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
+
+.header { display: flex; align-items: center; justify-content: space-between; }
+
+.title { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+
+.scores { display: flex; gap: 8px; }
+
+.score-box { background: var(--surface); border-radius: var(--radius); padding: 5px 12px; text-align: center; min-width: 60px; }
+
+.score-label { display: block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+
+.score-value { display: block; font-size: 1.1rem; font-weight: 700; }
+
+.controls { display: flex; gap: 8px; align-items: center; }
+
+select {
+  background: var(--surface);
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+button { cursor: pointer; border: none; border-radius: var(--radius); font-family: inherit; font-size: 0.95rem; font-weight: 600; padding: 10px 16px; transition: opacity 0.15s, transform 0.1s; }
+
+button:active { transform: scale(0.96); }
+
+#new-game { flex: 1; background: var(--accent); color: #1a1000; }
+
+#help-btn { background: var(--surface); color: var(--text); padding: 10px 14px; }
+
+.status { text-align: center; font-size: 0.88rem; color: var(--text-muted); min-height: 1.3em; }
+
+.input-area { display: flex; gap: 8px; }
+
+#guess-input {
+  flex: 1;
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--surface2);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-align: center;
+  font-family: monospace;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+#guess-input:focus { border-color: var(--accent); }
+
+#submit-btn { background: var(--accent); color: #1a1000; padding: 12px 20px; font-size: 1rem; }
+
+.history { display: flex; flex-direction: column; gap: 6px; max-height: 50vh; overflow-y: auto; }
+
+.history-row {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-num { color: var(--text-muted); font-size: 0.8rem; min-width: 24px; }
+
+.history-guess { font-size: 1.2rem; font-weight: 700; font-family: monospace; letter-spacing: 0.2em; flex: 1; }
+
+.history-result { display: flex; gap: 6px; }
+
+.tag {
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.tag.hit  { background: var(--hit-color);  color: #fff; }
+.tag.blow { background: var(--blow-color); color: #fff; }
+.tag.none { background: var(--surface2);   color: var(--text-muted); }
+
+/* モーダル */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+
+.modal-overlay[hidden] { display: none; }
+
+.modal { background: var(--surface); border-radius: 16px; padding: 28px 24px; max-width: 340px; width: 100%; display: flex; flex-direction: column; gap: 14px; text-align: center; }
+
+.modal h2 { font-size: 1.5rem; color: var(--accent); }
+
+.modal p { font-size: 0.9rem; line-height: 1.55; color: var(--text-muted); }
+
+.modal p.small { font-size: 0.8rem; }
+
+.howto-example { background: var(--bg); border-radius: var(--radius); padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+
+.howto-example p { text-align: left; }
+
+.howto-list { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+
+.howto-list li { font-size: 0.9rem; color: var(--text-muted); }
+
+.modal button { background: var(--accent); color: #1a1000; padding: 12px; font-size: 1rem; width: 100%; }
+
+.modal-btns { display: flex; flex-direction: column; gap: 8px; }
+
+#clear-close { background: var(--surface2); color: var(--text); }
+
+/* 統計テーブル */
+.stats-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.stats-table th { text-align: left; color: var(--text-muted); padding: 6px 8px; font-weight: 500; }
+.stats-table td { text-align: right; color: var(--text); padding: 6px 8px; font-weight: 700; font-size: 1rem; }
+.stats-table tr + tr { border-top: 1px solid var(--surface2); }
+
+/* テーマ切替 */
+body[data-theme="light"] {
+  --bg: #f0ece4;
+  --surface: #ffffff;
+  --surface2: #e8e4dc;
+  --text: #1a1a2e;
+  --text-muted: #666680;
+}

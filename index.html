@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>パズルゲーム集 🎮</title>
+  <style>
+    :root {
+      --bg: #0d1b2a;
+      --surface: #1a2e44;
+      --surface2: #243b55;
+      --accent: #00bcd4;
+      --accent2: #f59e0b;
+      --text: #f0f4f8;
+      --text-muted: #8eacc4;
+      --radius: 14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Arial, sans-serif;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 48px 20px 32px;
+      background: linear-gradient(180deg, #0a1520 0%, var(--bg) 100%);
+    }
+    header h1 {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header p {
+      margin-top: 12px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .badge {
+      background: var(--surface);
+      border: 1px solid var(--surface2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--surface2);
+      overflow: hidden;
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,188,212,0.18);
+      border-color: var(--accent);
+    }
+    .card-header {
+      padding: 24px 24px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .card-icon {
+      font-size: 2.6rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+    .card-en {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .card-body {
+      padding: 0 24px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .tag-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: var(--surface2);
+      color: var(--text-muted);
+    }
+    .tag.oni { background: rgba(220,38,38,0.2); color: #f87171; }
+    .tag.pause { background: rgba(0,188,212,0.15); color: #67e8f9; }
+    .tag.undo { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .card-footer {
+      padding: 14px 24px;
+      border-top: 1px solid var(--surface2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .play-btn {
+      background: var(--accent);
+      color: #0d1b2a;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .card:hover .play-btn {
+      background: #00e5ff;
+      transform: scale(1.04);
+    }
+    .difficulty-dots {
+      display: flex;
+      gap: 4px;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--surface2);
+    }
+    .dot.on { background: var(--accent); }
+    .dot.oni-on { background: #ef4444; }
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--surface2);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎮 パズルゲーム集</h1>
+  <p>13種類の本格パズル・カジュアルゲームを無料でプレイ</p>
+  <div class="badge-row">
+    <span class="badge">🌐 ブラウザ対応</span>
+    <span class="badge">📱 スマホ対応</span>
+    <span class="badge">✈️ オフライン対応</span>
+    <span class="badge">🆓 完全無料</span>
+    <span class="badge">🔴 鬼モード搭載</span>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+
+    <a class="card" href="./GAME3-2048/">
+      <div class="card-header">
+        <div class="card-icon">🔢</div>
+        <div>
+          <div class="card-title">2048</div>
+          <div class="card-en">Number Slide Puzzle</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">スライドしてタイルを合わせ、目標の数字を作ろう。鬼モードは5×5で8192を目指す。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: 5×5 / 8192</span>
+          <span class="tag undo">↩ 元に戻す</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME4-minesweeper/">
+      <div class="card-header">
+        <div class="card-icon">💣</div>
+        <div>
+          <div class="card-title">マインスイーパー</div>
+          <div class="card-en">Minesweeper</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">地雷を避けながら全てのマスを開けよう。鬼モードは30×20の超巨大フィールド。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: 30×20 / 150地雷</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME5-memory/">
+      <div class="card-header">
+        <div class="card-icon">🃏</div>
+        <div>
+          <div class="card-title">神経衰弱</div>
+          <div class="card-en">Memory Card Game</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">カードをめくってペアを探そう。動物・食べ物・自然の3テーマ、最大24ペア。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: 24ペア</span>
+          <span class="tag">🐶 3テーマ</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME6-snake/">
+      <div class="card-header">
+        <div class="card-icon">🐍</div>
+        <div>
+          <div class="card-title">スネーク</div>
+          <div class="card-en">Snake</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">餌を食べて成長しながら自分の体に当たらないように。鬼モードは壁すり抜けなし。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: 70ms / 壁なし</span>
+          <span class="tag pause">⏸ 一時停止</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME7-hitblow/">
+      <div class="card-header">
+        <div class="card-icon">🎯</div>
+        <div>
+          <div class="card-title">ヒットアンドブロー</div>
+          <div class="card-en">Hit &amp; Blow</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">隠された数字の並びを当てよう。ヒントを手がかりに論理的に絞り込む推理ゲーム。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: 5桁 / 6回</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME8-simon/">
+      <div class="card-header">
+        <div class="card-icon">🔵</div>
+        <div>
+          <div class="card-title">サイモン</div>
+          <div class="card-en">Simon Says</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">光と音のパターンを記憶して繰り返そう。鬼モードは2倍速で色が一瞬で消える。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: ×2.2速</span>
+          <span class="tag pause">⏸ 一時停止</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME9-flood/">
+      <div class="card-header">
+        <div class="card-icon">🌊</div>
+        <div>
+          <div class="card-title">フラッドフィル</div>
+          <div class="card-en">Flood Fill</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">色を選んでグリッドを塗りつぶそう。制限手数内に全体を同じ色にするパズル。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: 20×20 / 18手</span>
+          <span class="tag undo">↩ 元に戻す</span>
+          <span class="tag">👁 色覚対応</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME10-reversi/">
+      <div class="card-header">
+        <div class="card-icon">⚫</div>
+        <div>
+          <div class="card-title">リバーシ</div>
+          <div class="card-en">Reversi / Othello</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">CPUと対戦。石を置いて相手の石を挟んでひっくり返そう。鬼はminimax深さ5。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: minimax 深5</span>
+          <span class="tag undo">↩ 元に戻す</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME11-mastermind/">
+      <div class="card-header">
+        <div class="card-icon">🔴</div>
+        <div>
+          <div class="card-title">マスターマインド</div>
+          <div class="card-en">Mastermind</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">色のコードを当てよう。黒ペグは色・位置が正解、白ペグは色のみ正解のヒント。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: 8色6桁6回</span>
+          <span class="tag undo">↩ 元に戻す</span>
+          <span class="tag">👁 色覚対応</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME12-connectfour/">
+      <div class="card-header">
+        <div class="card-icon">🟡</div>
+        <div>
+          <div class="card-title">コネクトフォー</div>
+          <div class="card-en">Connect Four</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">縦・横・斜めに4つ並べたら勝ち。CPUと対戦。先手/後手選択可能。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: minimax 深6</span>
+          <span class="tag">👁 色覚対応</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME13-mole/">
+      <div class="card-header">
+        <div class="card-icon">🦔</div>
+        <div>
+          <div class="card-title">モグラたたき</div>
+          <div class="card-en">Whack-a-Mole</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">出てきたモグラをすばやくタップ！鬼モードはダミーモグラが混在、無限モードあり。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: ダミーあり</span>
+          <span class="tag pause">⏸ 一時停止</span>
+          <span class="tag">∞ エンドレス</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME14-breakout/">
+      <div class="card-header">
+        <div class="card-icon">🧱</div>
+        <div>
+          <div class="card-title">ブロック崩し</div>
+          <div class="card-en">Breakout</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">ボールを弾いてブロックを全て壊そう。鬼モードはボール2個同時・パドル幅半分。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: ボール2個</span>
+          <span class="tag pause">⏸ 一時停止</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+    <a class="card" href="./GAME15-hanoi/">
+      <div class="card-header">
+        <div class="card-icon">🗼</div>
+        <div>
+          <div class="card-title">ハノイの塔</div>
+          <div class="card-en">Tower of Hanoi</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">全てのディスクを右の棒へ移そう。鬼モードは7枚・最適解127手の最難関。</p>
+        <div class="tag-row">
+          <span class="tag oni">🔴 鬼: 7枚 / 127手</span>
+          <span class="tag undo">↩ 元に戻す</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="difficulty-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot oni-on"></div>
+        </div>
+        <div class="play-btn">プレイ ▶</div>
+      </div>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  <p>全ゲーム無料・広告なし・登録不要 &nbsp;|&nbsp; PWA対応でホーム画面に追加可能</p>
+</footer>
+
+</body>
+</html>

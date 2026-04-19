@@ -1,0 +1,416 @@
+:root {
+  --bg: #0d1b2a;
+  --panel: #132b44;
+  --ink: #e8f4f8;
+  --muted: #5a8a9f;
+  --line: #1e3a5f;
+  --cell-off: #162535;
+  --cell-off-border: #1e3a5f;
+  --cell-on: #ffd700;
+  --cell-on-dark: #e6a800;
+  --cell-glow: rgba(255, 215, 0, 0.55);
+  --cell-glow-wide: rgba(255, 149, 0, 0.25);
+  --accent: #4fc3f7;
+  --accent-dark: #0288d1;
+  --danger: #ef5350;
+}
+
+* { box-sizing: border-box; }
+
+html { min-height: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 24px 16px 32px;
+  background: var(--bg);
+  color: var(--ink);
+  display: flex;
+  justify-content: center;
+  font-family: "Segoe UI", "Noto Sans JP", system-ui, sans-serif;
+}
+
+button { font: inherit; }
+
+.app { width: min(100%, 480px); }
+
+/* ── ヘッダー ── */
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.scoreboard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.score-card {
+  min-width: 68px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  text-align: center;
+}
+
+.score-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.score-card strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 1.15rem;
+}
+
+/* ── ヘルプボタン ── */
+.help-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+  transition: background-color 120ms, color 120ms, border-color 120ms;
+  flex-shrink: 0;
+}
+
+.help-btn:hover,
+.help-btn:focus-visible {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ── 点灯数インジケーター ── */
+.lit-count {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+  min-height: 1.4em;
+}
+
+/* ── グリッド ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 12px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--cell-off);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ── セル ── */
+.cell {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 2px solid var(--cell-off-border);
+  border-radius: 8px;
+  background: var(--cell-off);
+  color: transparent;
+  cursor: pointer;
+  font-size: 0;
+  transition:
+    background-color 100ms ease,
+    border-color 100ms ease,
+    box-shadow 100ms ease,
+    transform 80ms ease;
+}
+
+.cell.on {
+  background: var(--cell-on);
+  border-color: var(--cell-on-dark);
+  color: transparent;
+  box-shadow:
+    0 0 10px 3px var(--cell-glow),
+    0 0 22px 8px var(--cell-glow-wide);
+}
+
+.cell:hover:not(:disabled) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cell:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cell:active:not(:disabled) {
+  transform: scale(0.88);
+}
+
+.cell:disabled {
+  cursor: default;
+}
+
+/* ── ステータス ── */
+.status {
+  min-height: 28px;
+  margin: 12px 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ── コントロール ── */
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.controls button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent-dark);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  transition: filter 120ms, transform 80ms;
+}
+
+.controls button:last-child {
+  background: #2a4a6b;
+}
+
+.controls button:active { transform: translateY(2px); }
+
+.controls button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── モーダル共通 ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 15, 28, 0.8);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.modal {
+  width: min(100%, 360px);
+  padding: 28px 24px 24px;
+  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.modal-title {
+  margin: 0 0 16px;
+  font-size: 1.4rem;
+  color: var(--ink);
+}
+
+.modal-body {
+  text-align: left;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.modal-body p { margin: 0 0 14px; }
+
+/* デモグリッド */
+.howto-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 16px;
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 6px;
+  border-radius: 6px;
+  background: var(--cell-off);
+  border: 1px solid var(--line);
+}
+
+.demo-on,
+.demo-off {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+.demo-on {
+  background: var(--cell-on);
+  box-shadow: 0 0 6px 2px var(--cell-glow);
+}
+
+.demo-off { background: var(--cell-off-border); }
+
+.demo-arrow {
+  font-size: 1.4rem;
+  color: var(--muted);
+}
+
+/* 遊び方リスト */
+.howto-list {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.howto-list li { display: flex; align-items: flex-start; gap: 10px; }
+
+.howto-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.howto-tip {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.2);
+  font-size: 0.88rem;
+  color: var(--accent);
+  text-align: center;
+}
+
+/* クリアモーダル */
+.modal-clear { padding-top: 20px; }
+
+.clear-emoji {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
+}
+
+.clear-moves {
+  margin: 4px 0 6px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--cell-on);
+}
+
+.clear-best {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.clear-best[hidden] { display: none; }
+
+/* モーダルボタン */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.btn-primary {
+  flex: 1;
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent-dark);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  transition: filter 120ms, transform 80ms;
+}
+
+.btn-primary:active { transform: translateY(2px); }
+.btn-primary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.btn-secondary {
+  flex: 1;
+  min-height: 44px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  transition: background-color 120ms, transform 80ms;
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,0.04); }
+.btn-secondary:active { transform: translateY(2px); }
+.btn-secondary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ── レスポンシブ ── */
+@media (max-width: 400px) {
+  body { padding: 14px 12px 24px; }
+
+  h1 { font-size: 1.65rem; }
+
+  .score-card { min-width: 60px; padding: 6px 8px; }
+
+  .grid { gap: 5px; padding: 8px; }
+
+  .cell { border-radius: 6px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .app { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+  .topbar { grid-column: 1 / -1; }
+  .lit-count { grid-column: 2; align-self: end; margin-bottom: 6px; }
+  .grid { grid-row: 2 / 4; }
+  .status { grid-column: 2; grid-row: 2; align-self: start; margin-top: 0; }
+  .controls { grid-column: 2; grid-row: 3; align-self: end; }
+}

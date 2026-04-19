@@ -1,0 +1,7 @@
+{
+  "name": "game15-hanoi",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": { "build": "node scripts/build-web-assets.js", "check": "node scripts/harness-check.js" },
+  "devDependencies": { "esbuild": "^0.25.0" }
+}

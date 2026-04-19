@@ -1,0 +1,179 @@
+:root {
+  --bg: #0d1b2a;
+  --surface: #1a2e44;
+  --surface2: #243b55;
+  --accent: #f48fb1;
+  --text: #f0f4f8;
+  --text-muted: #8eacc4;
+  --slot-empty: #243b55;
+  --radius: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 14px;
+}
+
+.app { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; padding-top: 6px; }
+
+.header { display: flex; align-items: center; justify-content: space-between; }
+
+.title { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+
+.scores { display: flex; gap: 8px; }
+
+.score-box { background: var(--surface); border-radius: var(--radius); padding: 5px 12px; text-align: center; min-width: 60px; }
+.score-label { display: block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+.score-value { display: block; font-size: 1.1rem; font-weight: 700; }
+
+.controls { display: flex; gap: 8px; }
+
+button { cursor: pointer; border: none; border-radius: var(--radius); font-family: inherit; font-size: 0.9rem; font-weight: 600; padding: 10px 14px; transition: transform 0.1s; }
+button:active { transform: scale(0.95); }
+#new-game { flex: 1; background: var(--accent); color: #1a0010; }
+#help-btn { background: var(--surface); color: var(--text); padding: 10px 14px; }
+
+.status { font-size: 0.88rem; color: var(--text-muted); text-align: center; min-height: 1.2em; }
+
+/* Current guess row */
+.current-guess {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.guess-slots { display: flex; gap: 8px; flex: 1; justify-content: center; }
+
+.slot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--slot-empty);
+  border: 2px dashed #4a6080;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.slot:hover { border-color: var(--accent); transform: scale(1.05); }
+.slot.filled { border: none; }
+
+#submit-guess { background: var(--accent); color: #1a0010; padding: 10px 14px; }
+#submit-guess:disabled { opacity: 0.4; cursor: not-allowed; }
+#clear-guess { background: var(--surface2); color: var(--text); padding: 10px 12px; }
+
+/* Color palette */
+.palette {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.color-pick {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  transition: transform 0.12s, border-color 0.12s;
+  padding: 0;
+}
+
+.color-pick:hover { transform: scale(1.12); }
+.color-pick.selected { border-color: #fff; transform: scale(1.1); }
+
+/* History */
+.history { display: flex; flex-direction: column; gap: 6px; max-height: 45vh; overflow-y: auto; }
+
+.hist-row {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hist-num { color: var(--text-muted); font-size: 0.78rem; min-width: 20px; }
+
+.hist-colors { display: flex; gap: 5px; }
+
+.hist-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.hist-pegs { display: flex; flex-wrap: wrap; gap: 3px; width: 52px; }
+
+.peg {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+.black-peg { background: #222; border: 1px solid #555; }
+.white-peg { background: #ddd; border: 1px solid #888; }
+.empty-peg { background: var(--surface2); }
+
+.hist-label { font-size: 0.78rem; color: var(--text-muted); }
+
+/* モーダル */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+.modal-overlay[hidden] { display: none; }
+.modal { background: var(--surface); border-radius: 16px; padding: 26px 22px; max-width: 340px; width: 100%; display: flex; flex-direction: column; gap: 12px; text-align: center; }
+.modal h2 { font-size: 1.5rem; color: var(--accent); }
+.modal p { font-size: 0.88rem; line-height: 1.55; color: var(--text-muted); }
+.peg-demo { background: var(--bg); border-radius: var(--radius); padding: 10px; font-size: 0.88rem; text-align: left; line-height: 1.8; }
+.howto-list { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 5px; }
+.howto-list li { font-size: 0.88rem; color: var(--text-muted); }
+.modal button { background: var(--accent); color: #1a0010; padding: 12px; font-size: 1rem; width: 100%; }
+.modal-btns { display: flex; flex-direction: column; gap: 8px; }
+#clear-close { background: var(--surface2); color: var(--text); }
+
+/* Answer reveal */
+.answer-reveal { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.answer-circle { width: 32px; height: 32px; border-radius: 50%; }
+
+/* Legend */
+.legend { font-size: 0.72rem; color: var(--text-muted); text-align: center; }
+
+/* Difficulty select */
+select { background: var(--surface); color: var(--text); border: 1px solid var(--surface2); border-radius: var(--radius); padding: 6px 10px; font-family: inherit; font-size: 0.9rem; cursor: pointer; }
+
+/* Undo button */
+#undo-btn { background: var(--surface2); color: var(--text); }
+#undo-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* Light theme */
+body[data-theme="light"] {
+  --bg: #f0ece4;
+  --surface: #ffffff;
+  --surface2: #e8e4dc;
+  --text: #1a1a2e;
+  --text-muted: #666680;
+  --slot-empty: #e8e4dc;
+}
+
+/* Theme / fullscreen buttons */
+#theme-btn, #fs-btn { background: var(--surface); color: var(--text); padding: 10px 12px; }
+
+/* Stats table */
+.stats-table { width: 100%; border-collapse: collapse; }
+.stats-table th, .stats-table td { padding: 8px 10px; font-size: 0.88rem; }
+.stats-table th { text-align: left; color: var(--text-muted); font-weight: 500; }
+.stats-table td { text-align: right; font-weight: 700; color: var(--text); }
+.stats-table tr + tr th, .stats-table tr + tr td { border-top: 1px solid var(--surface2); }

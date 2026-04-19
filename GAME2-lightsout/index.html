@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME2 Lights Out</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div class="topbar-title">
+          <p class="eyebrow">GAME2</p>
+          <h1>Lights Out</h1>
+        </div>
+        <section class="scoreboard" aria-label="スコア">
+          <div class="score-card">
+            <span>手数</span>
+            <strong id="moves">0</strong>
+          </div>
+          <div class="score-card">
+            <span>ベスト</span>
+            <strong id="best-score">-</strong>
+          </div>
+          <button id="help-btn" class="help-btn" type="button" aria-label="遊び方を見る">?</button>
+        </section>
+      </header>
+
+      <p id="lit-count" class="lit-count" aria-live="polite">読み込み中…</p>
+
+      <section id="grid" class="grid" aria-label="ライツアウト盤面"></section>
+
+      <p id="status" class="status" aria-live="polite"></p>
+
+      <section class="controls" aria-label="操作">
+        <button id="shuffle" type="button">新しい問題</button>
+        <button id="reset-best" type="button">記録リセット</button>
+      </section>
+    </main>
+
+    <!-- 遊び方モーダル -->
+    <div id="howto-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+      <div class="modal">
+        <h2 class="modal-title" id="howto-title">Lights Outの遊び方</h2>
+        <div class="modal-body">
+          <p>点灯しているセルを<strong>すべて消灯</strong>させたらクリア！</p>
+          <div class="howto-demo" aria-hidden="true">
+            <div class="demo-grid">
+              <span class="demo-off"></span>
+              <span class="demo-on"></span>
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+              <span class="demo-on"></span>
+              <span class="demo-on"></span>
+              <span class="demo-off"></span>
+              <span class="demo-on"></span>
+              <span class="demo-off"></span>
+            </div>
+            <span class="demo-arrow">→</span>
+            <div class="demo-grid">
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+              <span class="demo-off"></span>
+            </div>
+          </div>
+          <ul class="howto-list">
+            <li><span class="howto-icon">💡</span><div><strong>タップ</strong>&ensp;そのセルと上下左右が反転</div></li>
+            <li><span class="howto-icon">🎯</span><div><strong>目標</strong>&ensp;全セルを消灯（暗く）する</div></li>
+            <li><span class="howto-icon">🏆</span><div><strong>スコア</strong>&ensp;手数が少ないほど上手！</div></li>
+          </ul>
+          <p class="howto-tip">必ず解ける問題です。焦らず考えよう！</p>
+        </div>
+        <div class="modal-actions">
+          <button id="howto-close" class="btn-primary" type="button">さあはじめよう！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- クリアモーダル -->
+    <div id="clear-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="clear-title" hidden>
+      <div class="modal modal-clear">
+        <div class="clear-emoji" aria-hidden="true">🌟</div>
+        <h2 class="modal-title" id="clear-title">全消灯！</h2>
+        <p id="clear-moves-text" class="clear-moves"></p>
+        <p id="clear-best-text" class="clear-best" hidden>🏆 ベスト更新！</p>
+        <div class="modal-actions">
+          <button id="clear-next" class="btn-primary" type="button">次の問題</button>
+          <button id="clear-close" class="btn-secondary" type="button">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>カラーフラッド</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="title">🌊 カラーフラッド</h1>
+      <div class="scores">
+        <div class="score-box">
+          <span class="score-label">残り手数</span>
+          <span class="score-value" id="moves-left">25</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">塗り率</span>
+          <span class="score-value" id="fill-pct">0%</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">ベスト</span>
+          <span class="score-value" id="best-moves">-</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <select id="difficulty" aria-label="難易度">
+        <option value="easy">かんたん</option>
+        <option value="normal" selected>ふつう</option>
+        <option value="hard">むずかしい</option>
+        <option value="oni">🔴 鬼</option>
+      </select>
+      <button id="new-game" type="button">新しいゲーム</button>
+      <button id="undo-btn" type="button" disabled>元に戻す</button>
+      <button id="theme-btn" type="button" aria-label="テーマ切替">🌓</button>
+      <button id="fs-btn" type="button" aria-label="フルスクリーン">⛶</button>
+      <button id="cb-btn" type="button" aria-label="色覚サポート" title="色覚サポート">👁</button>
+      <button id="mute-btn" type="button" aria-label="ミュート">🔊</button>
+      <button id="stats-btn" type="button" aria-label="統計">📊</button>
+      <button id="help-btn" type="button" aria-label="遊び方">？</button>
+    </div>
+
+    <p class="status" id="status" aria-live="polite"></p>
+    <button id="share-btn" type="button" hidden>📋 シェア</button>
+
+    <canvas id="grid-canvas" aria-label="カラーフラッドグリッド"></canvas>
+
+    <!-- 色選択ボタン -->
+    <div class="color-picker" id="color-picker" aria-label="色を選択">
+      <button class="color-btn" data-color="red"    type="button" aria-label="赤" style="background:#ef5350"></button>
+      <button class="color-btn" data-color="orange" type="button" aria-label="橙" style="background:#ff7043"></button>
+      <button class="color-btn" data-color="yellow" type="button" aria-label="黄" style="background:#ffd54f"></button>
+      <button class="color-btn" data-color="green"  type="button" aria-label="緑" style="background:#66bb6a"></button>
+      <button class="color-btn" data-color="blue"   type="button" aria-label="青" style="background:#42a5f5"></button>
+      <button class="color-btn" data-color="purple" type="button" aria-label="紫" style="background:#ab47bc"></button>
+    </div>
+  </div>
+
+  <!-- 遊び方モーダル -->
+  <div class="modal-overlay" id="howto-modal" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+    <div class="modal">
+      <h2 id="howto-title">遊び方</h2>
+      <p>左上から色を広げて、盤面全体を同じ色で埋めよう！</p>
+      <ul class="howto-list">
+        <li>🎨 下の色ボタンをクリックすると色が広がる</li>
+        <li>🌊 つながった同じ色のマスも一緒に広がる</li>
+        <li>🏆 制限手数以内で全部埋めたらクリア！</li>
+      </ul>
+      <button id="howto-close" type="button">はじめる</button>
+    </div>
+  </div>
+
+  <!-- クリアモーダル -->
+  <div class="modal-overlay" id="clear-modal" role="dialog" aria-modal="true" aria-labelledby="clear-title" hidden>
+    <div class="modal">
+      <h2 id="clear-title">🎉 クリア！</h2>
+      <p id="clear-text"></p>
+      <p id="clear-best-text" hidden>🏆 ベスト手数更新！</p>
+      <div class="modal-btns">
+        <button id="clear-next" type="button">もう一度</button>
+        <button id="clear-close" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 失敗モーダル -->
+  <div class="modal-overlay" id="fail-modal" role="dialog" aria-modal="true" aria-labelledby="fail-title" hidden>
+    <div class="modal">
+      <h2 id="fail-title">😢 手数切れ！</h2>
+      <p id="fail-text"></p>
+      <button id="fail-new" type="button">もう一度</button>
+    </div>
+  </div>
+
+  <!-- 統計モーダル -->
+  <div class="modal-overlay" id="stats-modal" role="dialog" aria-modal="true" aria-labelledby="stats-title" hidden>
+    <div class="modal">
+      <h2 id="stats-title">📊 統計</h2>
+      <table class="stats-table">
+        <tbody>
+          <tr><th>プレイ回数</th><td id="stats-games">0</td></tr>
+          <tr><th>クリア数</th><td id="stats-wins">0</td></tr>
+          <tr><th>クリア率</th><td id="stats-rate">0%</td></tr>
+          <tr><th>現在の連勝</th><td id="stats-streak">0</td></tr>
+          <tr><th>最長連勝</th><td id="stats-best-streak">0</td></tr>
+        </tbody>
+      </table>
+      <button id="stats-close" type="button">閉じる</button>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+</body>
+</html>

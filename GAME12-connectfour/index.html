@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>四目並べ</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="title">🔴 四目並べ</h1>
+      <div class="scores">
+        <div class="score-box red-box">
+          <span class="score-label">🔴 あなた</span>
+          <span class="score-value" id="wins">0</span>
+        </div>
+        <div class="score-box yellow-box">
+          <span class="score-label">🟡 CPU</span>
+          <span class="score-value" id="cpu-wins">0</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">引き分け</span>
+          <span class="score-value" id="draws">0</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button id="new-game" type="button">新しいゲーム</button>
+      <button id="help-btn" type="button" aria-label="遊び方">？</button>
+      <button id="theme-btn" type="button" aria-label="テーマ切替">🌓</button>
+      <button id="cb-btn" type="button" aria-label="色覚サポート" title="色覚サポート">👁</button>
+      <button id="fs-btn" type="button" aria-label="フルスクリーン">⛶</button>
+      <button id="mute-btn" type="button" aria-label="ミュート">🔊</button>
+      <button id="stats-btn" type="button" aria-label="統計">📊</button>
+    </div>
+
+    <div class="controls controls-extra">
+      <select id="difficulty" aria-label="難易度">
+        <option value="easy">かんたん</option>
+        <option value="normal" selected>ふつう</option>
+        <option value="hard">むずかしい</option>
+        <option value="oni">🔴 鬼</option>
+      </select>
+      <label class="go-first-label">
+        <input type="checkbox" id="go-first" checked>
+        先手（赤）でプレイ
+      </label>
+    </div>
+
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <!-- Column drop buttons -->
+    <div class="col-buttons" id="col-buttons">
+      <button class="col-btn" data-col="0" type="button" aria-label="1列目">▼</button>
+      <button class="col-btn" data-col="1" type="button" aria-label="2列目">▼</button>
+      <button class="col-btn" data-col="2" type="button" aria-label="3列目">▼</button>
+      <button class="col-btn" data-col="3" type="button" aria-label="4列目">▼</button>
+      <button class="col-btn" data-col="4" type="button" aria-label="5列目">▼</button>
+      <button class="col-btn" data-col="5" type="button" aria-label="6列目">▼</button>
+      <button class="col-btn" data-col="6" type="button" aria-label="7列目">▼</button>
+    </div>
+
+    <div class="board" id="board" aria-label="四目並べ盤面"></div>
+  </div>
+
+  <!-- 遊び方モーダル -->
+  <div class="modal-overlay" id="howto-modal" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+    <div class="modal">
+      <h2 id="howto-title">遊び方</h2>
+      <p>縦・横・斜めに4つ並べたら勝ち！</p>
+      <ul class="howto-list">
+        <li>🔴 あなたは赤、CPUは黄色</li>
+        <li>👆 列の上の▼ボタンをクリック</li>
+        <li>⬇️ コマは下に落ちる</li>
+        <li>4️⃣ どの方向でも4つ並べたらクリア！</li>
+      </ul>
+      <button id="howto-close" type="button">はじめる</button>
+    </div>
+  </div>
+
+  <!-- 結果モーダル -->
+  <div class="modal-overlay" id="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden>
+    <div class="modal">
+      <h2 id="result-title"></h2>
+      <p id="result-text"></p>
+      <div class="modal-btns">
+        <button id="share-btn" type="button" hidden>📋 シェア</button>
+        <button id="result-new" type="button">もう一度</button>
+        <button id="result-close" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 統計モーダル -->
+  <div class="modal-overlay" id="stats-modal" role="dialog" aria-modal="true" aria-labelledby="stats-title" hidden>
+    <div class="modal">
+      <h2 id="stats-title">📊 統計</h2>
+      <table class="stats-table">
+        <tbody>
+          <tr><th>プレイ回数</th><td id="stats-played">0</td></tr>
+          <tr><th>勝利</th><td id="stats-wins">0</td></tr>
+          <tr><th>敗北</th><td id="stats-losses">0</td></tr>
+          <tr><th>引き分け</th><td id="stats-draws">0</td></tr>
+          <tr><th>勝率</th><td id="stats-rate">0%</td></tr>
+          <tr><th>最長連勝</th><td id="stats-streak">0</td></tr>
+        </tbody>
+      </table>
+      <button id="stats-close" type="button">閉じる</button>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

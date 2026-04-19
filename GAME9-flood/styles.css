@@ -1,0 +1,117 @@
+:root {
+  --bg: #0d1b2a;
+  --surface: #1a2e44;
+  --surface2: #243b55;
+  --accent: #00bcd4;
+  --text: #f0f4f8;
+  --text-muted: #8eacc4;
+  --radius: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  user-select: none;
+}
+
+.app { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+
+.header { width: 100%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+
+.title { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+
+.scores { display: flex; gap: 6px; }
+
+.score-box { background: var(--surface); border-radius: var(--radius); padding: 4px 10px; text-align: center; min-width: 58px; }
+
+.score-label { display: block; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+
+.score-value { display: block; font-size: 1rem; font-weight: 700; }
+
+.controls { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; }
+
+button { cursor: pointer; border: none; border-radius: var(--radius); font-family: inherit; font-size: 0.95rem; font-weight: 600; padding: 10px 16px; transition: opacity 0.15s, transform 0.1s; }
+
+button:active { transform: scale(0.95); }
+
+#new-game { flex: 1; background: var(--accent); color: #001f26; }
+
+#help-btn { background: var(--surface); color: var(--text); padding: 10px 14px; }
+
+#cb-btn { background: var(--surface); color: var(--text); padding: 10px 14px; opacity: 0.5; }
+
+#difficulty {
+  background: var(--surface);
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+#difficulty:focus { outline: 2px solid var(--accent); }
+
+#undo-btn { background: var(--surface2); color: var(--text); }
+
+#undo-btn:disabled { opacity: 0.4; }
+
+.status { font-size: 0.85rem; color: var(--text-muted); text-align: center; min-height: 1.2em; }
+
+#grid-canvas {
+  border-radius: var(--radius);
+  display: block;
+  width: min(90vw, 392px);
+  height: min(90vw, 392px);
+  image-rendering: pixelated;
+}
+
+.color-picker { display: flex; gap: 10px; }
+
+.color-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  transition: transform 0.12s, border-color 0.12s;
+  padding: 0;
+}
+
+.color-btn:hover { transform: scale(1.12); }
+.color-btn:active { transform: scale(0.94); }
+.color-btn.selected { border-color: #fff; transform: scale(1.1); }
+
+/* モーダル */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+.modal-overlay[hidden] { display: none; }
+.modal { background: var(--surface); border-radius: 16px; padding: 26px 22px; max-width: 340px; width: 100%; display: flex; flex-direction: column; gap: 12px; text-align: center; }
+.modal h2 { font-size: 1.5rem; color: var(--accent); }
+.modal p { font-size: 0.88rem; line-height: 1.55; color: var(--text-muted); }
+.howto-list { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+.howto-list li { font-size: 0.88rem; color: var(--text-muted); }
+.modal button { background: var(--accent); color: #001f26; padding: 12px; font-size: 1rem; width: 100%; }
+.modal-btns { display: flex; flex-direction: column; gap: 8px; }
+#clear-close { background: var(--surface2); color: var(--text); }
+
+.stats-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.stats-table th, .stats-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--surface2); }
+.stats-table th { color: var(--text-muted); font-weight: 600; }
+.stats-table td { color: var(--text); font-weight: 700; text-align: right; }
+
+body[data-theme="light"] {
+  --bg: #f0ece4;
+  --surface: #ffffff;
+  --surface2: #e8e4dc;
+  --text: #1a1a2e;
+  --text-muted: #666680;
+}

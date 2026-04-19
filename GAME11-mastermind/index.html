@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>マスターマインド</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="title">🔐 マスターマインド</h1>
+      <div class="scores">
+        <div class="score-box">
+          <span class="score-label">残り</span>
+          <span class="score-value" id="attempts-left">10</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">ベスト</span>
+          <span class="score-value" id="best-attempts">-</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <select id="difficulty" aria-label="難易度">
+        <option value="easy">かんたん</option>
+        <option value="normal" selected>ふつう</option>
+        <option value="hard">むずかしい</option>
+        <option value="oni">🔴 鬼</option>
+      </select>
+      <button id="new-game" type="button">新しいゲーム</button>
+      <button id="undo-btn" type="button" disabled>元に戻す</button>
+      <button id="help-btn" type="button" aria-label="遊び方">？</button>
+      <button id="stats-btn" type="button" aria-label="統計">📊</button>
+      <button id="theme-btn" type="button" aria-label="テーマ切替">🌓</button>
+      <button id="fs-btn" type="button" aria-label="フルスクリーン">⛶</button>
+      <button id="cb-btn" type="button" aria-label="色覚サポート" title="色覚サポート">👁</button>
+      <button id="mute-btn" type="button" aria-label="ミュート">🔊</button>
+    </div>
+
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <!-- 現在の入力行 -->
+    <div class="current-guess" id="current-guess" aria-label="現在の予想">
+      <div class="guess-slots" id="guess-slots">
+        <div class="slot" data-pos="0" aria-label="1番目"></div>
+        <div class="slot" data-pos="1" aria-label="2番目"></div>
+        <div class="slot" data-pos="2" aria-label="3番目"></div>
+        <div class="slot" data-pos="3" aria-label="4番目"></div>
+      </div>
+      <button id="submit-guess" type="button" disabled>送信</button>
+      <button id="clear-guess" type="button">クリア</button>
+    </div>
+
+    <!-- 色選択パレット -->
+    <div class="palette" id="palette" aria-label="色を選択">
+      <button class="color-pick" data-color="red"    type="button" aria-label="赤"    style="background:#e63946"></button>
+      <button class="color-pick" data-color="orange" type="button" aria-label="橙"    style="background:#f4a261"></button>
+      <button class="color-pick" data-color="yellow" type="button" aria-label="黄"    style="background:#e9c46a"></button>
+      <button class="color-pick" data-color="green"  type="button" aria-label="緑"    style="background:#2a9d8f"></button>
+      <button class="color-pick" data-color="blue"   type="button" aria-label="青"    style="background:#457b9d"></button>
+      <button class="color-pick" data-color="purple" type="button" aria-label="紫"    style="background:#9b5de5"></button>
+    </div>
+
+    <!-- 判定凡例 -->
+    <p class="legend">⚫ 色・位置ともに正解　⚪ 色のみ正解（位置ちがい）</p>
+    <button id="share-btn" type="button" hidden>📋 シェア</button>
+
+    <!-- 履歴 -->
+    <div class="history" id="history" aria-label="予想履歴" aria-live="polite"></div>
+  </div>
+
+  <!-- 遊び方モーダル -->
+  <div class="modal-overlay" id="howto-modal" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+    <div class="modal">
+      <h2 id="howto-title">遊び方</h2>
+      <p>コンピュータが選んだ色の並びを当てよう！（同じ色が複数あることも）</p>
+      <div class="peg-demo">
+        <span class="peg black-peg">⚫</span><strong> 黒ペグ</strong> = 色も位置も正解<br/>
+        <span class="peg white-peg">⚪</span><strong> 白ペグ</strong> = 色は正解、位置が違う
+      </div>
+      <ul class="howto-list">
+        <li>🎨 下のパレットから色を選ぶ</li>
+        <li>✅ 「送信」で判定</li>
+        <li>↩️ 「元に戻す」で直前の手をやり直せる</li>
+        <li>🏆 制限回数以内に当てたらクリア！</li>
+      </ul>
+      <button id="howto-close" type="button">はじめる</button>
+    </div>
+  </div>
+
+  <!-- クリアモーダル -->
+  <div class="modal-overlay" id="clear-modal" role="dialog" aria-modal="true" aria-labelledby="clear-title" hidden>
+    <div class="modal">
+      <h2 id="clear-title">🎉 正解！</h2>
+      <p id="clear-text"></p>
+      <p id="clear-best-text" hidden>🏆 ベスト更新！</p>
+      <div class="modal-btns">
+        <button id="clear-next" type="button">もう一度</button>
+        <button id="clear-close" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 失敗モーダル -->
+  <div class="modal-overlay" id="fail-modal" role="dialog" aria-modal="true" aria-labelledby="fail-title" hidden>
+    <div class="modal">
+      <h2 id="fail-title">😢 残念！</h2>
+      <p id="fail-answer-text"></p>
+      <button id="fail-new" type="button">もう一度</button>
+    </div>
+  </div>
+
+  <!-- 統計モーダル -->
+  <div class="modal-overlay" id="stats-modal" role="dialog" aria-modal="true" aria-labelledby="stats-title" hidden>
+    <div class="modal">
+      <h2 id="stats-title">📊 統計</h2>
+      <table class="stats-table">
+        <tbody>
+          <tr><th>プレイ回数</th><td id="stats-played">0</td></tr>
+          <tr><th>正解数</th><td id="stats-wins">0</td></tr>
+          <tr><th>正解率</th><td id="stats-winrate">0%</td></tr>
+          <tr><th>現在の連勝</th><td id="stats-streak">0</td></tr>
+          <tr><th>最長連勝</th><td id="stats-best-streak">0</td></tr>
+        </tbody>
+      </table>
+      <button id="stats-close" type="button">閉じる</button>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

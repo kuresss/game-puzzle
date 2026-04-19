@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME1 Puzzle</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div class="topbar-title">
+          <p class="eyebrow">GAME1</p>
+          <h1>15 Puzzle</h1>
+        </div>
+
+        <section class="scoreboard" aria-label="スコア">
+          <div class="score-card">
+            <span>手数</span>
+            <strong id="moves">0</strong>
+          </div>
+          <div class="score-card">
+            <span>ベスト</span>
+            <strong id="best-score">-</strong>
+          </div>
+          <button id="help-btn" class="help-btn" type="button" aria-label="遊び方を見る">?</button>
+        </section>
+      </header>
+
+      <section id="grid" class="grid" aria-label="15パズル盤面"></section>
+
+      <p id="status" class="status" aria-live="polite">
+        空きマスの隣にあるタイルを動かして、1から15まで並べましょう。
+      </p>
+
+      <section class="controls" aria-label="操作">
+        <button id="shuffle" type="button">まぜる</button>
+        <button id="reset-best" type="button">記録リセット</button>
+      </section>
+    </main>
+
+    <div id="banner-ad" role="complementary" aria-label="広告バナー領域" hidden>
+      <span>AdMob banner area</span>
+    </div>
+
+    <!-- 遊び方モーダル -->
+    <div id="howto-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+      <div class="modal">
+        <h2 class="modal-title" id="howto-title">15パズルの遊び方</h2>
+        <div class="modal-body">
+          <p>4×4の盤面に一つだけ空きマスがあります。<br>タイルを空きマスへ移動させて、<strong>1から15を順番通り</strong>に並べたらクリア！</p>
+          <div class="mini-grid-wrap">
+            <div class="mini-grid" aria-hidden="true">
+              <span>1</span><span>2</span><span>3</span><span>4</span>
+              <span>5</span><span>6</span><span>7</span><span>8</span>
+              <span>9</span><span>10</span><span>11</span><span>12</span>
+              <span>13</span><span>14</span><span>15</span><span class="mini-empty"></span>
+            </div>
+            <p class="goal-label">↑ これがゴール</p>
+          </div>
+          <ul class="howto-list">
+            <li><span class="howto-icon">👆</span><div><strong>タップ</strong>&ensp;空きマスの隣のタイルが動く</div></li>
+            <li><span class="howto-icon">↕</span><div><strong>スワイプ</strong>&ensp;空きマスをその方向に移動</div></li>
+            <li><span class="howto-icon">🔀</span><div><strong>まぜる</strong>&ensp;盤面をシャッフルして新しい問題へ</div></li>
+          </ul>
+          <p class="howto-tip">手数が少ないほど上手！ベストスコアは自動保存されます。</p>
+        </div>
+        <div class="modal-actions">
+          <button id="howto-close" class="btn-primary" type="button">さあはじめよう！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- クリアモーダル -->
+    <div id="clear-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="clear-title" hidden>
+      <div class="modal modal-clear">
+        <div class="clear-emoji" aria-hidden="true">🎉</div>
+        <h2 class="modal-title" id="clear-title">クリア！</h2>
+        <p id="clear-moves-text" class="clear-moves"></p>
+        <p id="clear-best-text" class="clear-best" hidden>🏆 ベスト更新！</p>
+        <div class="modal-actions">
+          <button id="clear-next" class="btn-primary" type="button">もう一度</button>
+          <button id="clear-close" class="btn-secondary" type="button">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

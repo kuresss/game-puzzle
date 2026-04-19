@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>もぐら叩き</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="title">&#x1F528; もぐら叩き</h1>
+      <div class="scores">
+        <div class="score-box">
+          <span class="score-label">スコア</span>
+          <span class="score-value" id="score">0</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label" id="timer-label">時間</span>
+          <span class="score-value" id="timer">30</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">ベスト</span>
+          <span class="score-value" id="best-score">0</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <select id="difficulty" aria-label="難易度">
+        <option value="easy">かんたん</option>
+        <option value="normal" selected>ふつう</option>
+        <option value="hard">むずかしい</option>
+        <option value="oni">&#x1F534; 鬼</option>
+        <option value="endless">エンドレス</option>
+      </select>
+      <button id="new-game" type="button">新しいゲーム</button>
+      <button id="pause-btn" type="button" hidden>&#x23F8;</button>
+      <button id="mute-btn" type="button" aria-label="ミュート">🔊</button>
+      <button id="theme-btn" type="button" aria-label="テーマ切替">🌓</button>
+      <button id="fs-btn" type="button" aria-label="フルスクリーン">⛶</button>
+      <button id="help-btn" type="button" aria-label="遊び方">？</button>
+      <button id="stats-btn" type="button" aria-label="統計">📊</button>
+    </div>
+
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <div class="grid" id="grid" aria-label="もぐら叩きグリッド">
+      <div class="hole" data-index="0" aria-label="1番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+      <div class="hole" data-index="1" aria-label="2番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+      <div class="hole" data-index="2" aria-label="3番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+      <div class="hole" data-index="3" aria-label="4番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+      <div class="hole" data-index="4" aria-label="5番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+      <div class="hole" data-index="5" aria-label="6番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+      <div class="hole" data-index="6" aria-label="7番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+      <div class="hole" data-index="7" aria-label="8番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+      <div class="hole" data-index="8" aria-label="9番 穴"><div class="mole-wrap"><div class="mole"></div></div></div>
+    </div>
+  </div>
+
+  <!-- 一時停止オーバーレイ -->
+  <div class="pause-overlay" id="pause-overlay" hidden>
+    <div class="pause-box">
+      <p class="pause-title">&#x23F8; 一時停止</p>
+      <button type="button" id="pause-resume">▶ 再開</button>
+    </div>
+  </div>
+
+  <!-- 遊び方モーダル -->
+  <div class="modal-overlay" id="howto-modal" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+    <div class="modal">
+      <h2 id="howto-title">遊び方</h2>
+      <p>飛び出してきたもぐらをすばやく叩こう！</p>
+      <ul class="howto-list">
+        <li>&#x1F439; 茶色のもぐら = <strong>+10点</strong></li>
+        <li>&#x2B50; 金色のもぐら = <strong>+30点</strong>（すばやく！）</li>
+        <li>&#x1F480; ダミーもぐら（鬼モードのみ）= <strong>-15点</strong>（叩かないで！）</li>
+        <li>&#x23F1;&#xFE0F; 難易度で制限時間が変わる</li>
+        <li>&#x26A1; 時間が経つほどもぐらが速く出てくる！</li>
+        <li>&#x23F8; ポーズボタンまたは Esc キーで一時停止</li>
+      </ul>
+      <button id="howto-close" type="button">はじめる</button>
+    </div>
+  </div>
+
+  <!-- 結果モーダル -->
+  <div class="modal-overlay" id="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden>
+    <div class="modal">
+      <h2 id="result-title">&#x23F1;&#xFE0F; 時間切れ！</h2>
+      <p id="result-score-text"></p>
+      <p id="result-best-text" hidden>&#x1F3C6; ベストスコア更新！</p>
+      <button id="share-btn" type="button" hidden>📋 シェア</button>
+      <div class="modal-btns">
+        <button id="result-new" type="button">もう一度</button>
+        <button id="result-close" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 統計モーダル -->
+  <div class="modal-overlay" id="stats-modal" role="dialog" aria-modal="true" aria-labelledby="stats-title" hidden>
+    <div class="modal">
+      <h2 id="stats-title">📊 統計</h2>
+      <table class="stats-table">
+        <tr><th>プレイ回数</th><td id="stats-played">0</td></tr>
+        <tr><th>ハイスコア</th><td id="stats-high">0</td></tr>
+        <tr><th>平均スコア</th><td id="stats-avg">0</td></tr>
+      </table>
+      <div class="modal-btns">
+        <button id="stats-close" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

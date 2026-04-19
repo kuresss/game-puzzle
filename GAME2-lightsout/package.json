@@ -1,0 +1,14 @@
+{
+  "name": "game2-lightsout",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-web-assets.js",
+    "start": "npm run build && npx serve www",
+    "test": "node --test",
+    "harness:check": "node scripts/harness-check.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}

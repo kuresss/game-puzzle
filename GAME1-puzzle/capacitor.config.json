@@ -1,0 +1,17 @@
+{
+  "appId": "com.game1.puzzle",
+  "appName": "GAME1 Puzzle",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "launchAutoHide": true,
+      "backgroundColor": "#1a1a2e",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    }
+  }
+}

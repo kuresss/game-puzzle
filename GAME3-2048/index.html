@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>2048</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div class="app">
+
+    <!-- ヘッダー -->
+    <header class="header">
+      <h1 class="title">2048</h1>
+      <span id="target-tile" class="target-tile">目標: 2048</span>
+      <div class="scores" aria-label="スコア">
+        <div class="score-box">
+          <span class="score-label">スコア</span>
+          <span class="score-value" id="score">0</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">ベスト</span>
+          <span class="score-value" id="best-score">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- コントロール -->
+    <div class="controls">
+      <button id="new-game" type="button">新しいゲーム</button>
+      <select id="difficulty">
+        <option value="easy">かんたん</option>
+        <option value="normal" selected>ふつう</option>
+        <option value="hard">むずかしい</option>
+        <option value="oni">🔴 鬼</option>
+      </select>
+      <button id="undo-btn" type="button" disabled>元に戻す</button>
+      <button id="help-btn" type="button" aria-label="遊び方">？</button>
+      <button id="stats-btn" type="button" aria-label="統計">📊</button>
+      <button id="mute-btn" type="button" aria-label="ミュート">🔊</button>
+      <button id="theme-btn" type="button" aria-label="テーマ切替">🌓</button>
+      <button id="fs-btn" type="button" aria-label="フルスクリーン">⛶</button>
+    </div>
+    <button id="share-btn" type="button" hidden>📋 シェア</button>
+
+    <!-- ステータス -->
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <!-- グリッド -->
+    <div class="grid" id="grid" aria-label="2048グリッド" role="grid"></div>
+
+    <!-- 操作ヒント -->
+    <p class="hint">← → ↑ ↓ キーまたはスワイプで操作</p>
+
+    <div id="stats-modal" class="modal-overlay" hidden>
+      <div class="modal">
+        <h2>統計</h2>
+        <table class="stats-table">
+          <tr><td>プレイ回数</td><td id="stats-played">0</td></tr>
+          <tr><td>勝利数</td><td id="stats-wins">0</td></tr>
+          <tr><td>勝率</td><td id="stats-rate">0%</td></tr>
+          <tr><td>現在の連勝</td><td id="stats-streak">0</td></tr>
+          <tr><td>最長連勝</td><td id="stats-best">0</td></tr>
+        </table>
+        <div class="modal-btns">
+          <button id="stats-close" type="button">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 遊び方モーダル -->
+  <div class="modal-overlay" id="howto-modal" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+    <div class="modal">
+      <h2 id="howto-title">遊び方</h2>
+      <p>矢印キーまたはスワイプでタイルを動かします。</p>
+      <p>同じ数字が隣り合うと合体して、数字が2倍になります。</p>
+      <p><strong>2048</strong>のタイルを作ったらクリア！</p>
+
+      <div class="howto-demo" aria-hidden="true">
+        <div class="demo-row">
+          <span class="demo-cell">2</span>
+          <span class="demo-cell">2</span>
+          <span class="demo-cell"></span>
+          <span class="demo-cell">4</span>
+        </div>
+        <div class="demo-arrow">← 左に動かすと</div>
+        <div class="demo-row">
+          <span class="demo-cell highlight">4</span>
+          <span class="demo-cell">4</span>
+          <span class="demo-cell"></span>
+          <span class="demo-cell"></span>
+        </div>
+      </div>
+
+      <button id="howto-close" type="button">はじめる</button>
+    </div>
+  </div>
+
+  <!-- クリアモーダル -->
+  <div class="modal-overlay" id="clear-modal" role="dialog" aria-modal="true" aria-labelledby="clear-title" hidden>
+    <div class="modal">
+      <h2 id="clear-title">🎉 クリア！</h2>
+      <p id="clear-score-text"></p>
+      <p id="clear-best-text" hidden>🏆 ベストスコア更新！</p>
+      <div class="modal-btns">
+        <button id="clear-next" type="button">次のゲームへ</button>
+        <button id="clear-close" type="button">続ける</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ゲームオーバーモーダル -->
+  <div class="modal-overlay" id="over-modal" role="dialog" aria-modal="true" aria-labelledby="over-title" hidden>
+    <div class="modal">
+      <h2 id="over-title">💀 ゲームオーバー</h2>
+      <p id="over-score-text"></p>
+      <p id="over-best-text" hidden>🏆 ベストスコア更新！</p>
+      <button id="over-new" type="button">もう一度</button>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+  </script>
+</body>
+</html>
