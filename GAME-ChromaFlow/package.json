@@ -1,0 +1,18 @@
+{
+  "name": "game-chromaflow",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "build": "node scripts/build-web-assets.js",
+    "start": "node -e \"const http=require('http'),fs=require('fs'),path=require('path');const s=http.createServer((req,res)=>{const f=path.join('www',req.url==='/'?'index.html':req.url.replace(/^\\//,''));fs.readFile(f,(e,d)=>{if(e){res.writeHead(404);res.end()}else{const m={'html':'text/html','css':'text/css','js':'text/javascript','json':'application/json','png':'image/png'};res.writeHead(200,{'Content-Type':m[f.split('.').pop()]||'text/plain'});res.end(d)}})});s.listen(3000,()=>console.log('http://localhost:3000'));\"",
+    "check": "node scripts/harness-check.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "esbuild-plugin-glsl": "^1.1.0"
+  },
+  "dependencies": {
+    "pako": "^2.1.0"
+  }
+}
