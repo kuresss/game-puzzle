@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚔ 魔法使いの試練 — タイピングRPG</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="game" data-scene="title">
+
+  <!-- ===== タイトル ===== -->
+  <section id="scene-title" class="scene">
+    <div class="title-bg"></div>
+    <div class="title-content">
+      <div class="title-logo">⚔</div>
+      <h1 class="title-name">魔法使いの試練</h1>
+      <p class="title-sub">〜 タイピングRPG 〜</p>
+      <div class="title-btns">
+        <button id="btn-start" class="btn-primary">▶ はじめる</button>
+        <button id="btn-ranking" class="btn-sub">🏆 ランキング</button>
+      </div>
+      <button id="btn-mute" class="btn-icon" title="ミュート">🔊</button>
+    </div>
+    <!-- チュートリアル（初回のみ） -->
+    <div id="tutorial-banner" style="display:none">
+      <div class="tutorial-box">
+        <h3>🎮 遊び方</h3>
+        <ul>
+          <li>画面の単語をキーボードで正確に打つと攻撃！</li>
+          <li>速く打つほどダメージが増える</li>
+          <li>ミスすると単語がリセット</li>
+          <li><strong>fire / blizzard / thunder / heal</strong> は魔法スペル</li>
+          <li>連続正解でコンボボーナス！</li>
+        </ul>
+        <button id="tutorial-close" class="btn-primary">わかった！</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 言語選択 ===== -->
+  <section id="scene-language" class="scene">
+    <div class="lang-box">
+      <h2>単語の言語を選んでください</h2>
+      <div class="lang-btns">
+        <button id="btn-lang-en" class="btn-lang">
+          🇺🇸 英語モード
+          <small>fire, blizzard...</small>
+        </button>
+        <button id="btn-lang-ja" class="btn-lang">
+          🇯🇵 日本語モード
+          <small>ローマ字入力<br>suraimu, mahou...</small>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== バトル ===== -->
+  <section id="scene-battle" class="scene">
+
+    <!-- ヘッダー -->
+    <div id="battle-header">
+      <span id="stage-name">第1章: はじまりの戦い</span>
+      <div class="exp-wrap">
+        <span id="player-lv">LV.1</span>
+        <div class="bar-track exp-track"><div id="exp-fill" class="exp-fill"></div></div>
+      </div>
+      <button id="btn-pause" class="btn-icon" title="ポーズ (Esc)">⏸</button>
+    </div>
+
+    <!-- ポーズオーバーレイ -->
+    <div id="pause-overlay" style="display:none">
+      <div id="pause-box">
+        <div class="pause-icon">⏸</div>
+        <div class="pause-label">PAUSED</div>
+        <p class="pause-hint">Esc または ⏸ で再開</p>
+      </div>
+    </div>
+
+    <!-- 敵エリア -->
+    <div id="enemy-area">
+      <div id="enemy-sprite">🟢</div>
+      <div id="enemy-info">
+        <div id="enemy-name">スライム</div>
+        <div class="hp-row">
+          <span class="bar-label">HP</span>
+          <div class="bar-track"><div id="enemy-hp-bar" class="hp-fill"></div></div>
+          <span id="enemy-hp-text">40/40</span>
+        </div>
+        <div id="enemy-stats">⚔ ATK:8  🛡 DEF:0</div>
+        <!-- 敵攻撃タイマー -->
+        <div class="timer-wrap">
+          <span class="bar-label">⏱</span>
+          <div class="bar-track timer-track"><div id="enemy-timer-fill" class="timer-fill"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ダメージ数字レイヤー -->
+    <div id="damage-area"></div>
+
+    <!-- フェーズ2オーバーレイ -->
+    <div id="phase2-overlay" style="display:none">
+      <div id="phase2-box">
+        <div id="phase2-msg"></div>
+        <div class="phase2-label">⚡ PHASE 2 ⚡</div>
+      </div>
+    </div>
+
+    <!-- 単語入力エリア -->
+    <div id="word-area">
+      <div id="word-label">✨ 打て！</div>
+      <div id="word-chars"></div>
+      <div id="romaji-hint"></div>
+      <input id="typing-input" type="text"
+        autocomplete="off" autocorrect="off" autocapitalize="off"
+        spellcheck="false" placeholder="ここに入力…">
+    </div>
+
+    <!-- コンボ表示 -->
+    <div id="combo-display" style="display:none">COMBO × 3</div>
+
+    <!-- プレイヤーステータス -->
+    <div id="player-status">
+      <div class="stat-row">
+        <span>❤</span>
+        <div class="bar-track"><div id="player-hp-bar" class="hp-fill" style="background:#4caf50"></div></div>
+        <span id="player-hp-text">100/100</span>
+      </div>
+      <div class="stat-row">
+        <span>💙</span>
+        <div class="bar-track"><div id="player-mp-bar" class="mp-fill"></div></div>
+        <span id="player-mp-text">60/60</span>
+      </div>
+    </div>
+
+    <!-- スペルヒント -->
+    <div id="spell-list"></div>
+
+    <!-- バトルログ -->
+    <div id="battle-log"></div>
+
+  </section>
+
+  <!-- ===== レベルアップ ===== -->
+  <section id="scene-levelup" class="scene">
+    <div class="result-box levelup-box">
+      <div class="levelup-icon">⭐</div>
+      <h2>レベルアップ！</h2>
+      <p id="levelup-text"></p>
+      <p id="levelup-stats" class="levelup-stats"></p>
+      <button id="btn-next-stage" class="btn-primary">次のステージへ ▶</button>
+    </div>
+  </section>
+
+  <!-- ===== ゲームオーバー ===== -->
+  <section id="scene-gameover" class="scene">
+    <div class="result-box gameover-box">
+      <div class="gameover-icon">💀</div>
+      <h2>ゲームオーバー</h2>
+      <p id="gameover-score"></p>
+      <div class="result-btns">
+        <button id="btn-retry" class="btn-primary">もう一度 🔄</button>
+        <button id="btn-to-title" class="btn-sub">タイトルへ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ランキング / エンディング ===== -->
+  <section id="scene-ranking" class="scene">
+    <div class="result-box ranking-box">
+      <h2>🏆 ハイスコア</h2>
+      <p id="ending-score"></p>
+      <div id="ranking-list"></div>
+      <div class="result-btns">
+        <button id="btn-ranking-play" class="btn-primary">▶ プレイ</button>
+        <button id="btn-ranking-back" class="btn-sub">タイトルへ</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
